@@ -1,8 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using VL_Legend.DAL;
 
 namespace VL_Legend.Controllers
@@ -34,14 +32,12 @@ namespace VL_Legend.Controllers
             }
             return data;
         }
-
+        [Route("Edit/{id}")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(long id, TEntity data)
+        public async Task<IActionResult> Put( TEntity data)
         {
-            if (id != data.Id)
-            {
-                return BadRequest();
-            }
+            
+           
             await _repository.Update(data);
             return NoContent();
         }

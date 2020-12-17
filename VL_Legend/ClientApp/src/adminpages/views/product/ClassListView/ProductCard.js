@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
 
 const ProductCard = ({ className, product, ...rest }) => {
   const classes = useStyles();
-
+  const [currentId, setCurrentId] = useState(0)
   return (
     <Card
       className={clsx(classes.root, className)}
@@ -55,14 +55,17 @@ const ProductCard = ({ className, product, ...rest }) => {
           gutterBottom
           variant="h4"
         >
-         <Link to={{pathname:`formedit/${product.id}`}}  > {product.name}</Link>
+         <Link  params={product.id} to={{pathname:`formedit/${product.id}`}}  > {product.name}</Link>
         </Typography>
         <Typography
           align="center"
           color="textPrimary"
           variant="body1"
+          dangerouslySetInnerHTML={{
+            __html: product.descriptions
+          }}
         >
-          {product.descriptions}
+          {/* {product.descriptions} */}
         </Typography>
       </CardContent>
       <Box flexGrow={1} />

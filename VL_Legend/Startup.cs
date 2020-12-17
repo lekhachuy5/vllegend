@@ -32,6 +32,8 @@ namespace VL_Legend
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddScoped<ClassRoomRepository>();
+            services.AddScoped<System_ConfigRepository>();
+
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {

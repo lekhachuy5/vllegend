@@ -18,6 +18,7 @@ namespace VL_Legend.Models
             base.OnModelCreating(builder);
         }
         public DbSet<Classroom> Classroom { get; set; }
+        public DbSet<System_Config> System_Config { get; set; }
         public override int SaveChanges()
         {
             ChangeTracker.DetectChanges();

@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
-import CKEditor from 'react-ckeditor-component';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import PropTypes from "prop-types";
+import clsx from "clsx";
+import * as action from "../../../../action/actions";
+import ReactQuill from "react-quill";
+import { connect } from "react-redux";
+import { SYSCFGURL } from "../../../../constant/actionsTypes";
 import {
   Box,
   Button,
@@ -14,39 +18,183 @@ import {
   Grid,
   Typography,
   makeStyles,
-  TextField
-} from '@material-ui/core';
-
+  TextField,
+} from "@material-ui/core";
+import useForm from "../../product/ClassListView/useForm";
 const useStyles = makeStyles({
   root: {},
   item: {
-    display: 'flex',
-    flexDirection: 'column'
-  }
+    display: "flex",
+    flexDirection: "column",
+  },
 });
 
-const Notifications = ({ className, ...rest }) => {
+const Notifications = ({ className, ...props }) => {
   const classes = useStyles();
-  const [values, setValues] = useState({
-    description: 'Trang web VL Lengend la trang web....',
-    keyWords: 'VL,Van lang, Vl Legend, DHVL',
-    logo: 'logoVL',
-    slogan: 'slogan',
-    email: 'Vlu@vanlanguni.edu.vn',
-    phone: '093xxx0930',
-    facebook: 'facebook.com/vllegend',
-    address: 'ĐHVL Cs3'
+  const [filesToBeSent, setFilesToBeSent] = useState({
+    name: "",
+    file: null,
   });
+  const [current, setCurrent] = useState({
+    id: 1,
+    description: "",
+    keywords: "",
+    image: "",
+    slogan: "",
+    email: "",
+    phone: "",
+    facebook: "",
+    address: "",
+  });
+  useEffect(() => {
+    const value = axios
+      .get(SYSCFGURL + 1)
+      .then((response) => {
+        console.log(response.data);
+        setCurrent({ ...response.data });
+        setValues({ ...response.data });
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
-  const handleChange = event => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
-    });
+  const initialFieldsValues = {
+    id: 1,
+    description: "",
+    keywords: "",
+    image: "",
+    slogan: "",
+    email: "",
+    phone: "",
+    facebook: "",
+    address: "",
   };
 
+  const validate = (fieldsValues = values) => {
+    let temp = {};
+    if ("keywords" in fieldsValues)
+      temp.name = values.keywords || current.keywords ? "" : "Required";
+    if ("email" in fieldsValues)
+      temp.email = values.email
+        ? /^$|.+@.+..+/.test(values.email)
+          ? ""
+          : "Mail not valid"
+        : "required";
+    if ("description" in fieldsValues)
+      temp.description = values.description ? "" : "Required";
+    if ("slogan" in fieldsValues) temp.slogan = values.slogan ? "" : "Required";
+    if ("phone" in fieldsValues) temp.phone = values.phone ? "" : "Required";
+    if ("facebook" in fieldsValues)
+      temp.facebook = values.facebook ? "" : "Required";
+    if ("address" in fieldsValues)
+      temp.address = values.address ? "" : "Required";
+
+    setErrors({
+      ...temp,
+    });
+    if (fieldsValues == values)
+      return Object.values(temp).every((x) => x == "");
+  };
+  const {
+    values,
+    setValues,
+    errors,
+    setErrors,
+    handleInputChange,
+    resetForm,
+  } = useForm(initialFieldsValues, validate, props.setCurrentId);
+  function ckChange(e) {
+    const getVl = { description: e };
+    const inputVal = Object.values(values).every((x) => x == null);
+    console.log(current);
+    if (!inputVal) {
+      setValues({
+        ...current,
+        ...getVl,
+      });
+    } else {
+      setValues({
+        ...values,
+        ...getVl,
+      });
+    }
+  }
+  const updateSys = (e) => {
+    
+    console.log(values);
+
+    const inputVal = Object.values(values).every((x) => x == null)
+      ? current
+      : values;
+    if (validate()) {
+      if (values.image !== current.image && values.images !== null) {
+        const fd = new FormData();
+        const config = {
+          headers: {
+            'content-type': 'multipart/form-data',
+          },
+        };
+        fd.append('file',filesToBeSent.file, filesToBeSent.file.name);
+        var apiBaseUrl = "https://localhost:44337/api/upload/postfile";
+    
+        axios.post(apiBaseUrl,fd,config)
+        .then(res=> {
+          console.log(res);
+        })
+        // }
+      }
+      props.updateSys(SYSCFGURL + "edit/", 1, inputVal);
+      // setIsSuccess(true);
+    }
+  };
+
+  const testDataUpload = ()=>{
+  
+    const fd = new FormData();
+    const config = {
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+    };
+    fd.append('file',filesToBeSent.file, filesToBeSent.file.name);
+    var apiBaseUrl = "https://localhost:44337/api/upload/postfile";
+
+    axios.post(apiBaseUrl,fd,config)
+    .then(res=> {
+      console.log(res);
+    })
+  }
+
+  const handleUploadClick = (event) => {
+    // event.preventDefault();
+    const target = event.target.files[0];
+    setFilesToBeSent({ name: target.name, file: target });
+    console.log(target.name + " size :" + target.size);
+    console.log(filesToBeSent);
+    setValues({ ...values, image: target.name });
+    console.log(values);
+    const f = new FormData();
+    f.set("file", event.target);
+    console.log(f.getAll("file"));
+    // var apiBaseUrl =  'https://localhost:44337/api/upload/upload';
+    // if(filesToBeSent.length>0){
+    //     var filesArray = filesToBeSent;
+    //     let f = new FormData();
+    //     for(var i in filesArray){
+    //     console.log("files",filesArray);
+    //          f = new FormData();
+    //          f.append("File",filesArray[i][0] )
+    //          axios.post(apiBaseUrl, f, {
+    //                 headers: {'Content-Type': 'multipart/form-data'}
+    //          });
+    //     }
+    //     alert("File upload completed");
+    // }
+    // else{
+    //     alert("Please select files first");
+    // }
+  };
   return (
-    <form className={clsx(classes.root, className)} {...rest}>
+    <form className={clsx(classes.root, className)} onSubmit={updateSys}>
       <Grid container spacing={3}>
         <Grid item lg={8} md={6} xs={12}>
           <Card>
@@ -61,11 +209,15 @@ const Notifications = ({ className, ...rest }) => {
                   <TextField
                     fullWidth
                     label="Từ khóa"
-                    name="keyWords"
-                    onChange={handleChange}
+                    name="keywords"
+                    onChange={handleInputChange}
                     required
-                    value={values.keyWords}
+                    value={values.keywords}
                     variant="outlined"
+                    {...(errors.keywords && {
+                      error: true,
+                      helperText: errors.keywords,
+                    })}
                   />
                 </Grid>
                 <Grid item md={6} xs={12}>
@@ -73,41 +225,46 @@ const Notifications = ({ className, ...rest }) => {
                     fullWidth
                     label="Slogan"
                     name="slogan"
-                    onChange={handleChange}
+                    onChange={handleInputChange}
                     required
                     value={values.slogan}
                     variant="outlined"
+                    {...(errors.slogan && {
+                      error: true,
+                      helperText: errors.slogan,
+                    })}
                   />
                 </Grid>
                 <Grid item md={12} xs={12}>
                   <Typography ml={1} variant="body1">
                     Mô tả
                   </Typography>
-                  <CKEditor
-                    activeClass="editor"
-                    fullWidthnp
-                    helperText="Ghi đầy đủ thông tin cá nhân"
-                    label="Họ tên"
+
+                  <ReactQuill
                     name="description"
-                    onChange={handleChange}
+                    onChange={ckChange}
                     required
-                    content={values.description}
+                    value={values.description}
                     variant="outlined"
+                    {...(errors.description && {
+                      error: true,
+                      helperText: errors.description,
+                    })}
                   />
                 </Grid>
                 <Grid item md={12} xs={12}>
                   <input
                     type="file"
-                    fullWidth
                     label="logo"
-                    name="logo"
-                    onChange={handleChange}
+                    name="image"
+                    // value={values.image}
+                    onChange={(e) => handleUploadClick(e)}
                     required
                     variant="outlined"
                   />
                   <img
-                    src="/static/images/logoVL.png"
-                    style={{ maxHeight: '100px', maxWidth: '100px' }}
+                    src={`/storages/uploadfiles/${values.image}`}
+                    style={{ maxHeight: "100px", maxWidth: "100px" }}
                   />
                 </Grid>
               </Grid>
@@ -117,7 +274,10 @@ const Notifications = ({ className, ...rest }) => {
         </Grid>
         <Grid item lg={4} md={6} xs={12}>
           <Card>
-            <CardHeader subheader="Cập nhật thông tin liên lạc" title="Liên hệ" />
+            <CardHeader
+              subheader="Cập nhật thông tin liên lạc"
+              title="Liên hệ"
+            />
             <Divider />
 
             <CardContent>
@@ -127,9 +287,13 @@ const Notifications = ({ className, ...rest }) => {
                     fullWidth
                     label="Email"
                     name="email"
-                    onChange={handleChange}
+                    onChange={handleInputChange}
                     required
                     value={values.email}
+                    {...(errors.email && {
+                      error: true,
+                      helperText: errors.email,
+                    })}
                     variant="outlined"
                   />
                 </Grid>
@@ -138,10 +302,14 @@ const Notifications = ({ className, ...rest }) => {
                     fullWidth
                     label="SĐT"
                     name="phone"
-                    onChange={handleChange}
+                    onChange={handleInputChange}
                     type="text"
                     value={values.phone}
                     variant="outlined"
+                    {...(errors.phone && {
+                      error: true,
+                      helperText: errors.phone,
+                    })}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -149,10 +317,14 @@ const Notifications = ({ className, ...rest }) => {
                     fullWidth
                     label="Địa chỉ"
                     name="address"
-                    onChange={handleChange}
+                    onChange={handleInputChange}
                     type="text"
                     value={values.address}
                     variant="outlined"
+                    {...(errors.address && {
+                      error: true,
+                      helperText: errors.address,
+                    })}
                   />
                 </Grid>
                 <Grid item xs={12}>
@@ -160,9 +332,13 @@ const Notifications = ({ className, ...rest }) => {
                     fullWidth
                     label="Facebook"
                     name="facebook"
-                    onChange={handleChange}
+                    onChange={handleInputChange}
                     type="text"
                     value={values.facebook}
+                    {...(errors.facebook && {
+                      error: true,
+                      helperText: errors.facebook,
+                    })}
                     variant="outlined"
                   />
                 </Grid>
@@ -171,8 +347,11 @@ const Notifications = ({ className, ...rest }) => {
 
             <Divider />
             <Box display="flex" justifyContent="flex-end" p={2}>
-              <Button color="primary" variant="contained">
+              <Button type="submit" color="primary" variant="contained">
                 Cập nhật
+              </Button>
+              <Button type="button" color="primary" onClick={testDataUpload}variant="contained">
+               upload
               </Button>
             </Box>
           </Card>
@@ -183,7 +362,14 @@ const Notifications = ({ className, ...rest }) => {
 };
 
 Notifications.propTypes = {
-  className: PropTypes.string
+  className: PropTypes.string,
+};
+const mapStateToProps = (state) => ({
+  systemConfigList: state.cus.list,
+});
+const mapActionToProps = {
+  updateSys: action.update,
+  // fectid: action.fecthbyid
 };
 
-export default Notifications;
+export default connect(mapStateToProps, mapActionToProps)(Notifications);

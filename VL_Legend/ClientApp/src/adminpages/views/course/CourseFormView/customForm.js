@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import CKEditor from 'react-ckeditor-component';
+// import CKEditor from 'react-ckeditor-component';
 import {
   Box,
   Button,
@@ -103,7 +103,7 @@ const Notifications = ({ className, ...rest }) => {
                   <Typography ml={1} variant="body1">
                     Mô tả
                   </Typography>
-                  <CKEditor
+                  {/* <CKEditor
                     activeClass="editor"
                     fullWidthnp
                     helperText="Ghi đầy đủ thông tin cá nhân"
@@ -113,7 +113,7 @@ const Notifications = ({ className, ...rest }) => {
                     required
                     content={values.description}
                     variant="outlined"
-                  />
+                  /> */}
                 </Grid>
               </Grid>
             </CardContent>

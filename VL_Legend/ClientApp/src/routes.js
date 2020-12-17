@@ -9,7 +9,7 @@ import LoginView from 'src/adminpages/views/auth/LoginView';
 import NotFoundView from 'src/adminpages/views/errors/NotFoundView';
 import ClassListView from 'src/adminpages/views/product/ClassListView';
 import ClassFormCreateView from 'src/adminpages/views/product/ClassForm';
-import ClassFormEditView from 'src/adminpages/views/product/ClassFormEdit';
+import ClassFormEditView from 'src/adminpages/views/product/ClassListView/customForm';
 // import RegisterView from 'src/views/auth/RegisterView';
 import SettingsView from 'src/adminpages/views/settings/SettingsView';
 import StudentListView from 'src/adminpages/views/students/StudentsListView';
@@ -35,8 +35,7 @@ const routes = [
       { path: 'classes/form', element: <ClassFormCreateView /> },
       {
         path: 'classes/formedit/:id',
-        params: 'id',
-        element: <ClassFormEditView />
+        element: <ClassFormEditView/>
       },
       { path: 'course/create/', element: <CourseFormCreate /> },
       { path: '*', element: <Navigate to="/administratvie/404" /> }

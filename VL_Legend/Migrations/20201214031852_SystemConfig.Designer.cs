@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VL_Legend.Models;
 
 namespace VL_Legend.Migrations
 {
     [DbContext(typeof(VLLsqlContext))]
-    partial class VLLsqlContextModelSnapshot : ModelSnapshot
+    [Migration("20201214031852_SystemConfig")]
+    partial class SystemConfig
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
