@@ -11,7 +11,7 @@ import {
   SvgIcon,
   makeStyles
 } from '@material-ui/core';
-import { Plus, PlusCircle, Search as SearchIcon } from 'react-feather';
+import { PlusCircle, Search as SearchIcon } from 'react-feather';
 
 const useStyles = makeStyles((theme) => ({
   root: {},

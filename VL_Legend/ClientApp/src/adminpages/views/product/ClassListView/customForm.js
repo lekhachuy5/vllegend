@@ -1,9 +1,8 @@
 import React, { useState, useEffect, Component } from "react";
-import PropTypes from "prop-types";
 import clsx from "clsx";
 import axios from "axios";
 
-import { BASEURL } from "../../../../constant/actionsTypes";
+import { CLASSROOMURL } from "../../../../constant/actionsTypes";
 import { Navigate, useParams } from "react-router-dom";
 import {
   Box,
@@ -11,9 +10,7 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Checkbox,
   Divider,
-  FormControlLabel,
   Grid,
   Typography,
   makeStyles,
@@ -41,8 +38,8 @@ const Notifications = ({ ...props }) => {
     descriptions: "",
   });
   useEffect(() => {
-    const value = axios
-      .get("https://localhost:44337/api/classroom/" + id)
+     axios
+      .get(CLASSROOMURL + id)
       .then((response) => {
         console.log(response.data);
         setCurrent({ ...response.data });
@@ -99,7 +96,6 @@ const Notifications = ({ ...props }) => {
     errors,
     setErrors,
     handleInputChange,
-    resetForm,
   } = useForm(initialFieldsValues, validate, props.setCurrentId);
 
   const updateFnc = (e) => {
@@ -109,7 +105,7 @@ const Notifications = ({ ...props }) => {
     console.log(inputVal)
     if (validate()) {
       props.updateClass(
-        "https://localhost:44337/api/classroom/edit/",
+        CLASSROOMURL+'edit/',
         id,
         inputVal
       );
@@ -119,7 +115,7 @@ const Notifications = ({ ...props }) => {
 
   return (
     <>
-      {isSuccess ? <Navigate to="/Administratvie/classes" /> : null}
+      {isSuccess ? <Navigate to="/quanly/classes" /> : null}
       <form className={clsx(classes.root)} onSubmit={updateFnc}>
         <Grid container spacing={3}>
           <Grid item lg={12} md={6} xs={12}>

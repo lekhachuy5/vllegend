@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Navigate } from 'react-router-dom';
 import DashboardLayout from 'src/adminpages/layouts/DashboardLayout';
 import MainLayout from 'src/adminpages/layouts/MainLayout';
@@ -10,7 +10,6 @@ import NotFoundView from 'src/adminpages/views/errors/NotFoundView';
 import ClassListView from 'src/adminpages/views/product/ClassListView';
 import ClassFormCreateView from 'src/adminpages/views/product/ClassForm';
 import ClassFormEditView from 'src/adminpages/views/product/ClassListView/customForm';
-// import RegisterView from 'src/views/auth/RegisterView';
 import SettingsView from 'src/adminpages/views/settings/SettingsView';
 import StudentListView from 'src/adminpages/views/students/StudentsListView';
 import CourseListView from 'src/adminpages/views/course/CourseListView';
@@ -18,11 +17,10 @@ import CourseFormCreate from 'src/adminpages/views/course/CourseFormView';
 import ClientLayout from 'src/clientpages/demos/RestaurantLandingPage.js';
 import LeaderBoard from 'src/clientpages/demos/EventLandingPage.js';
 
-import { render } from 'nprogress';
 
 const routes = [
   {
-    path: 'Administratvie',
+    path: 'quanly',
     element: <DashboardLayout />,
     children: [
       { path: 'account', element: <AccountView /> },
@@ -38,17 +36,17 @@ const routes = [
         element: <ClassFormEditView/>
       },
       { path: 'course/create/', element: <CourseFormCreate /> },
-      { path: '*', element: <Navigate to="/administratvie/404" /> }
+      { path: '*', element: <Navigate to="/quanly/404" /> }
     ]
   },
   {
-    path: 'administratvie',
+    path: 'quanly',
     element: <MainLayout />,
     children: [
       { path: 'login', element: <LoginView /> },
       { path: '404', element: <NotFoundView /> },
-      { path: '/', element: <Navigate to="/administratvie/dashboard" /> },
-      { path: '*', element: <Navigate to="/administratvie/404" /> }
+      { path: '/', element: <Navigate to="/quanly/dashboard" /> },
+      // { path: '*', element: <Navigate to="/quanly/404" /> }
     ]
   },
   {
@@ -56,7 +54,7 @@ const routes = [
     element: <ClientLayout />,
     children: [
     
-      { path: '*', element: <Navigate to="/administratvie/404" /> }
+      // { path: '*', element: <Navigate to="/quanly/404" /> }
     ]
   },
   {
@@ -66,7 +64,7 @@ const routes = [
       { path: '404', element: <NotFoundView /> },
       { path: '/', element: <Navigate to="/homepage" /> },
       { path: 'leaderboard', element: <LeaderBoard /> },
-      { path: '*', element: <Navigate to="/administratvie/404" /> }
+      // { path: '*', element: <Navigate to="/quanly/404" /> }
     ]
   }
 ];

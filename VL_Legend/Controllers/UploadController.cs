@@ -30,10 +30,16 @@ namespace VL_Legend.Controllers
             if (file.Length > 0)
             {
                
-                string path = Path.Combine(_env.ContentRootPath, @"ClientApp\public\Storages\UploadFiles\"+ files.FileName );
-
+                string pathup = Path.Combine(_env.ContentRootPath, @"ClientApp\public\Storages\Changes\");
+                string path = Path.Combine(_env.ContentRootPath, @"ClientApp\public\Storages\Changes\"+ files.FileName );
+                bool exist = System.IO.Directory.Exists(pathup);
+                if (!exist)
+                {
+                    System.IO.Directory.CreateDirectory(pathup);
+                }
                 using (var fs = new FileStream(path, FileMode.Create))
                 {
+             
                     await file.CopyToAsync(fs);
                 }
                 return Ok();

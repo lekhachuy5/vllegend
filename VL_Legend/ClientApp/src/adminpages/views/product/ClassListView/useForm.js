@@ -1,28 +1,17 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 
 const useForm = (initialFieldValues, validate, setCurrentId) => {
   const [values, setValues] = useState(initialFieldValues);
   const [errors, setErrors] = useState({});
 
- 
-
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    // const {value} = target ? target : target.getData();
-    // if(name.includes('editor')){
-
-    //     const fieldValue = { 'descriptions': value };
-    //     setValues({
-    //       ...values,
-    //       ...fieldValue,
-    //     });
-    // }else{
     const fieldValue = { [name]: value };
     setValues({
       ...values,
       ...fieldValue,
     });
-    console.log(values)
+    console.log(values);
     validate(fieldValue);
   };
 
@@ -31,7 +20,6 @@ const useForm = (initialFieldValues, validate, setCurrentId) => {
       ...initialFieldValues,
     });
     setErrors({});
-    // setCurrentId(0)
   };
 
   return {
@@ -41,7 +29,6 @@ const useForm = (initialFieldValues, validate, setCurrentId) => {
     setErrors,
     handleInputChange,
     resetForm,
-   
   };
 };
 export default useForm;

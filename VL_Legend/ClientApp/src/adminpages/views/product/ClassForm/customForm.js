@@ -1,7 +1,6 @@
-import React, { useState, useEffect, Component } from "react";
-import PropTypes from "prop-types";
+import React, { useState} from "react";
 import clsx from "clsx";
-import { BASEURL } from "../../../../constant/actionsTypes";
+import { CLASSROOMURL } from "../../../../constant/actionsTypes";
 import { Navigate } from "react-router-dom";
 
 import {
@@ -10,9 +9,7 @@ import {
   Card,
   CardContent,
   CardHeader,
-  Checkbox,
   Divider,
-  FormControlLabel,
   Grid,
   Typography,
   makeStyles,
@@ -21,9 +18,7 @@ import {
 import { connect } from "react-redux";
 import * as action from "../../../../action/actions";
 import useForm from "../ClassListView/useForm";
-// import ReactQuill from 'react-quill';
-import * as ReactQuill from 'react-quill'; // Typescript
-// const ReactQuill = require('react-quill'); // CommonJS
+import * as ReactQuill from 'react-quill';
 const classes = makeStyles({
   root: {},
   item: {
@@ -46,10 +41,10 @@ const Notifications = ({ ...props }) => {
     let temp = {};
     if ("name" in fieldsValues)
       temp.name = values.name
-        ? values.name.length > 10
+        ? values.name.length >= 10
           ? ""
-          : "must > 10 character"
-        : "Required";
+          : "Tên phải có ít nhất 10 ký tự"
+        : "Không được bỏ trống";
     // if ('email' in fieldsValues)
     //     temp.email = values.email ? ((/^$|.+@.+..+/).test(values.email) ? "" : "Mail not valid") : "required"
     // if ("descriptions" in fieldsValues)
@@ -67,7 +62,6 @@ const Notifications = ({ ...props }) => {
     errors,
     setErrors,
     handleInputChange,
-    resetForm,
    
   } = useForm(initialFieldsValues, validate, props.setCurrentId);
 
@@ -75,7 +69,7 @@ const Notifications = ({ ...props }) => {
     e.preventDefault();
     // const onSuccess = () => addToast("Summitted successfullty",{appearance:'success'})
     if (validate()) {
-      props.createClass("https://localhost:44337/api/classroom/create", values);
+      props.createClass(CLASSROOMURL+"create", values);
       // resetForm();
       setIsSuccess(true);  
     }
@@ -96,7 +90,7 @@ const Notifications = ({ ...props }) => {
 
   return (
     <>
-      {isSuccess ? <Navigate to="/Administratvie/classes" /> : null}
+      {isSuccess ? <Navigate to="/quanly/classes" /> : null}
       <form className={clsx(classes.root)} onSubmit={createNew}>
         <Grid container spacing={3}>
           <Grid item lg={12} md={6} xs={12}>

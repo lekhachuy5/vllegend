@@ -5,16 +5,14 @@ import clsx from "clsx";
 import * as action from "../../../../action/actions";
 import ReactQuill from "react-quill";
 import { connect } from "react-redux";
-import { SYSCFGURL } from "../../../../constant/actionsTypes";
+import { SYSCFGURL, UPLOADFOLDER } from "../../../../constant/actionsTypes";
 import {
   Box,
   Button,
   Card,
   CardContent,
   CardHeader,
-  Checkbox,
   Divider,
-  FormControlLabel,
   Grid,
   Typography,
   makeStyles,
@@ -94,15 +92,12 @@ const Notifications = ({ className, ...props }) => {
     if (fieldsValues == values)
       return Object.values(temp).every((x) => x == "");
   };
-  const {
-    values,
-    setValues,
-    errors,
-    setErrors,
-    handleInputChange,
-    resetForm,
-  } = useForm(initialFieldsValues, validate, props.setCurrentId);
-  function ckChange(e) {
+  const { values, setValues, errors, setErrors, handleInputChange } = useForm(
+    initialFieldsValues,
+    validate,
+    props.setCurrentId
+  );
+  const ckChange = (e) => {
     const getVl = { description: e };
     const inputVal = Object.values(values).every((x) => x == null);
     console.log(current);
@@ -119,9 +114,8 @@ const Notifications = ({ className, ...props }) => {
     }
   }
   const updateSys = (e) => {
-    
     console.log(values);
-
+    e.preventDefault();
     const inputVal = Object.values(values).every((x) => x == null)
       ? current
       : values;
@@ -130,68 +124,30 @@ const Notifications = ({ className, ...props }) => {
         const fd = new FormData();
         const config = {
           headers: {
-            'content-type': 'multipart/form-data',
+            "content-type": "multipart/form-data",
           },
         };
-        fd.append('file',filesToBeSent.file, filesToBeSent.file.name);
-        var apiBaseUrl = "https://localhost:44337/api/upload/postfile";
-    
-        axios.post(apiBaseUrl,fd,config)
-        .then(res=> {
-          console.log(res);
-        })
-        // }
+        fd.append("file", filesToBeSent.file, filesToBeSent.file.name);
+        axios.post(UPLOADFOLDER, fd, config).then((res) => {});
       }
       props.updateSys(SYSCFGURL + "edit/", 1, inputVal);
-      // setIsSuccess(true);
     }
   };
 
-  const testDataUpload = ()=>{
-  
-    const fd = new FormData();
-    const config = {
-      headers: {
-        'content-type': 'multipart/form-data',
-      },
-    };
-    fd.append('file',filesToBeSent.file, filesToBeSent.file.name);
-    var apiBaseUrl = "https://localhost:44337/api/upload/postfile";
-
-    axios.post(apiBaseUrl,fd,config)
-    .then(res=> {
-      console.log(res);
-    })
-  }
-
   const handleUploadClick = (event) => {
-    // event.preventDefault();
     const target = event.target.files[0];
     setFilesToBeSent({ name: target.name, file: target });
     console.log(target.name + " size :" + target.size);
-    console.log(filesToBeSent);
     setValues({ ...values, image: target.name });
-    console.log(values);
-    const f = new FormData();
-    f.set("file", event.target);
-    console.log(f.getAll("file"));
-    // var apiBaseUrl =  'https://localhost:44337/api/upload/upload';
-    // if(filesToBeSent.length>0){
-    //     var filesArray = filesToBeSent;
-    //     let f = new FormData();
-    //     for(var i in filesArray){
-    //     console.log("files",filesArray);
-    //          f = new FormData();
-    //          f.append("File",filesArray[i][0] )
-    //          axios.post(apiBaseUrl, f, {
-    //                 headers: {'Content-Type': 'multipart/form-data'}
-    //          });
-    //     }
-    //     alert("File upload completed");
-    // }
-    // else{
-    //     alert("Please select files first");
-    // }
+    if (event.target.files && event.target.files[0]) {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        document
+          .getElementById("imgSmall")
+          .setAttribute("src", e.target.result);
+      };
+      reader.readAsDataURL(event.target.files[0]);
+    }
   };
   return (
     <form className={clsx(classes.root, className)} onSubmit={updateSys}>
@@ -259,11 +215,14 @@ const Notifications = ({ className, ...props }) => {
                     name="image"
                     // value={values.image}
                     onChange={(e) => handleUploadClick(e)}
-                    required
+                    {...(values.image != null && current.image != null
+                      ? ""
+                      : "required")}
                     variant="outlined"
                   />
                   <img
-                    src={`/storages/uploadfiles/${values.image}`}
+                    id="imgSmall"
+                    src={`/storages/changes/${values.image}`}
                     style={{ maxHeight: "100px", maxWidth: "100px" }}
                   />
                 </Grid>
@@ -350,9 +309,9 @@ const Notifications = ({ className, ...props }) => {
               <Button type="submit" color="primary" variant="contained">
                 Cập nhật
               </Button>
-              <Button type="button" color="primary" onClick={testDataUpload}variant="contained">
+              {/* <Button type="button" color="primary" onClick={testDataUpload}variant="contained">
                upload
-              </Button>
+              </Button> */}
             </Box>
           </Card>
         </Grid>

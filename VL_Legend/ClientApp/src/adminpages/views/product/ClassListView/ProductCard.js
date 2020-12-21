@@ -1,6 +1,6 @@
-import React,{useState} from 'react';
-import PropTypes from 'prop-types';
-import clsx from 'clsx';
+import React from "react";
+import PropTypes from "prop-types";
+import clsx from "clsx";
 import {
   Avatar,
   Box,
@@ -9,45 +9,32 @@ import {
   Divider,
   Grid,
   Typography,
-  makeStyles
-} from '@material-ui/core';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import {Link} from 'react-router-dom';
+  makeStyles,
+  Button,
+} from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
-    flexDirection: 'column'
+    display: "flex",
+    flexDirection: "column",
   },
   statsItem: {
-    alignItems: 'center',
-    display: 'flex'
+    alignItems: "center",
+    display: "flex",
   },
   statsIcon: {
-    marginRight: theme.spacing(1)
-  }
+    marginRight: theme.spacing(1),
+  },
 }));
 
 const ProductCard = ({ className, product, ...rest }) => {
   const classes = useStyles();
-  const [currentId, setCurrentId] = useState(0)
   return (
-    <Card
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
+    <Card className={clsx(classes.root, className)} {...rest}>
       <CardContent>
-        <Box
-          display="flex"
-          justifyContent="center"
-          mb={3}
-        >
-          <Avatar
-            alt="Product"
-           
-            variant="square"
-          />
+        <Box display="flex" justifyContent="center" mb={3}>
+          <Avatar alt="Product" variant="square" />
         </Box>
         <Typography
           align="center"
@@ -55,14 +42,17 @@ const ProductCard = ({ className, product, ...rest }) => {
           gutterBottom
           variant="h4"
         >
-         <Link  params={product.id} to={{pathname:`formedit/${product.id}`}}  > {product.name}</Link>
+          <Link params={product.id} to={{ pathname: `formedit/${product.id}` }}>
+            {" "}
+            {product.name}
+          </Link>
         </Typography>
         <Typography
           align="center"
           color="textPrimary"
           variant="body1"
           dangerouslySetInnerHTML={{
-            __html: product.descriptions
+            __html: product.descriptions,
           }}
         >
           {/* {product.descriptions} */}
@@ -71,38 +61,22 @@ const ProductCard = ({ className, product, ...rest }) => {
       <Box flexGrow={1} />
       <Divider />
       <Box p={2}>
-        <Grid
-          container
-          justify="space-between"
-          spacing={2}
-        >
-          <Grid
-            className={classes.statsItem}
-            item
-          >
-            <AccessTimeIcon
-              className={classes.statsIcon}
-              color="action"
-            />
-            <Typography
-              color="textSecondary"
-              display="inline"
-              variant="body2"
-            >
-              Updated 2hr ago
-            </Typography>
+        <Grid container justify="space-between" spacing={2}>
+          <Grid className={classes.statsItem} item>
+            <Button color="secondary" display="inline" variant="contained">
+              <Link
+                params={product.id}
+                to={{ pathname: `formedit/${product.id}` }}
+              >
+                cập nhật
+              </Link>
+            </Button>
           </Grid>
-          <Grid
-            className={classes.statsItem}
-            item
-          >
-            
-            <Typography
-              color="textSecondary"
-              display="inline"
-              variant="body2"
-            >
-             <Link to={`/Administratvie/course/${product.id}`}>Xem khóa học</Link>
+          <Grid className={classes.statsItem} item>
+            <Typography color="textSecondary" display="inline" variant="body2">
+              <Link to={`/quanly/course/${product.id}`}>
+                Xem khóa học
+              </Link>
             </Typography>
           </Grid>
         </Grid>
@@ -113,7 +87,7 @@ const ProductCard = ({ className, product, ...rest }) => {
 
 ProductCard.propTypes = {
   className: PropTypes.string,
-  product: PropTypes.object.isRequired
+  product: PropTypes.object.isRequired,
 };
 
 export default ProductCard;

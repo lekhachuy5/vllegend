@@ -34,34 +34,34 @@ const user = {
 
 const items = [
   {
-    href: '/Administratvie/dashboard',
+    href: '/quanly/dashboard',
     icon: BarChartIcon,
     title: 'Dashboard'
   },
   {
-    href: '/Administratvie/account',
+    href: '/quanly/account',
     icon: UserIcon,
     title: 'Thông tin cá nhân'
   },
   {
-    href: '/Administratvie/lecturers',
+    href: '/quanly/lecturers',
     icon: UsersIcon,
     title: 'Giảng Viên'
   },
   {
-    href: '/Administratvie/students',
+    href: '/quanly/students',
     icon: UserPlusIcon,
     title: 'Sinh Viên'
   },
 
   {
-    href: '/Administratvie/classes',
+    href: '/quanly/classes',
     icon: Class,
     title: 'Lớp học'
   },
  
   {
-    href: '/Administratvie/configs',
+    href: '/quanly/configs',
     icon: SettingsIcon,
     title: 'Cấu hình'
   },
