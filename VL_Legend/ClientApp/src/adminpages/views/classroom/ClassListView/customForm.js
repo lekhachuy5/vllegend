@@ -1,8 +1,5 @@
-import React, { useState, useEffect, Component } from "react";
+import React, { useState, useEffect } from "react";
 import clsx from "clsx";
-import axios from "axios";
-
-import { CLASSROOMURL } from "../../../../constant/actionsTypes";
 import { Navigate, useParams } from "react-router-dom";
 import {
   Box,
@@ -18,8 +15,9 @@ import {
 } from "@material-ui/core";
 import { connect } from "react-redux";
 import * as action from "../../../../action/actions";
-import useForm from "../ClassListView/useForm";
+import useForm from "./useForm";
 import ReactQuill from "react-quill";
+import ClassApi from "src/apimod/classroomApi";
 const classes = makeStyles({
   root: {},
   item: {
@@ -29,7 +27,6 @@ const classes = makeStyles({
 });
 
 const Notifications = ({ ...props }) => {
-  //redux saga
   const { id } = useParams();
 
   const [current, setCurrent] = useState({
@@ -38,15 +35,15 @@ const Notifications = ({ ...props }) => {
     descriptions: "",
   });
   useEffect(() => {
-     axios
-      .get(CLASSROOMURL + id)
-      .then((response) => {
-        console.log(response.data);
-        setCurrent({ ...response.data });
-        setValues({ ...response.data });
-      })
-      .catch((err) => console.log(err));
-  }, [id]);
+  getData();
+  }, []);
+
+  const getData = async () => {
+    const response  = await ClassApi.get(id);
+    console.log(response);
+    setCurrent({ ...response });
+    setValues({ ...response });
+  }
 
   const initialFieldsValues = {
     id: parseFloat(id),
@@ -104,11 +101,12 @@ const Notifications = ({ ...props }) => {
     const inputVal = Object.values(values).every((x)=> x== null) ? current : values;
     console.log(inputVal)
     if (validate()) {
-      props.updateClass(
-        CLASSROOMURL+'edit/',
-        id,
-        inputVal
-      );
+      // props.updateClass(
+      //   CLASSROOMURL+'edit/',
+      //   id,
+      //   inputVal
+      // );
+      ClassApi.update(id,inputVal);
       setIsSuccess(true);
     }
   };
@@ -154,7 +152,6 @@ const Notifications = ({ ...props }) => {
               <Divider />
               <Box display="flex" justifyContent="flex-end" p={2}>
                 <Button
-                  // onClick={this.createNew}
                   type="submit"
                   color="primary"
                   variant="contained"

@@ -28,7 +28,9 @@ const TopBar = ({ className, ...rest }) => {
       <Toolbar className={classes.toolbar}>
         <RouterLink to="/">
           <Logo />
+          
         </RouterLink>
+        <h4>TRANG QUẢN TRỊ VL-LEGEND</h4>
       </Toolbar>
     </AppBar>
   );

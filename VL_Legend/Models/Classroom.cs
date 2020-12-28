@@ -15,6 +15,6 @@ namespace VL_Legend.Models
         public string Name { get; set; }
         [Required(ErrorMessage = "Không được bỏ trống")]
         public string Descriptions { get; set; }
-        
+        public virtual List<Courses> Courses { get; set; }
     }
 }

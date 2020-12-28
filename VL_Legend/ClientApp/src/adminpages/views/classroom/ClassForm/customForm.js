@@ -19,6 +19,8 @@ import { connect } from "react-redux";
 import * as action from "../../../../action/actions";
 import useForm from "../ClassListView/useForm";
 import * as ReactQuill from 'react-quill';
+import ClassApi from "src/apimod/classroomApi";
+
 const classes = makeStyles({
   root: {},
   item: {
@@ -34,8 +36,6 @@ const initialFieldsValues = {
 
 
 const Notifications = ({ ...props }) => {
-  //redux saga
-  // const [content,setContent] = useState();
   const [isSuccess, setIsSuccess] = useState(false);
   const validate = (fieldsValues = values) => {
     let temp = {};
@@ -67,10 +67,8 @@ const Notifications = ({ ...props }) => {
 
   const createNew = (e) => {
     e.preventDefault();
-    // const onSuccess = () => addToast("Summitted successfullty",{appearance:'success'})
     if (validate()) {
-      props.createClass(CLASSROOMURL+"create", values);
-      // resetForm();
+      ClassApi.create(values);
       setIsSuccess(true);  
     }
   };
@@ -81,12 +79,6 @@ const Notifications = ({ ...props }) => {
    console.log(values)
 
   };
-
-  //   this.setState({
-  //     [event.target.name]: event.target.value,
-  //   });
-  //   console.log(this.state);
-  // };
 
   return (
     <>

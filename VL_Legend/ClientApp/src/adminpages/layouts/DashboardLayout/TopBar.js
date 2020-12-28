@@ -9,6 +9,7 @@ import {
   Hidden,
   IconButton,
   Toolbar,
+  Typography,
   makeStyles
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -41,7 +42,9 @@ const TopBar = ({
       <Toolbar>
         <RouterLink to="/">
           <Logo />
+     
         </RouterLink>
+        <Typography>TRANG QUẢN TRỊ VL-LEGEND</Typography>
         <Box flexGrow={1} />
         <Hidden mdDown>
           <IconButton color="inherit">

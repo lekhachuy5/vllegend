@@ -9,7 +9,7 @@ const Logo = (props) => {
         style={{ maxHeight: "50px", maxWidth: "50px" }}
         {...props}
       />
-      <h4>VL-Legend</h4>
+      
     </div>
   );
 };

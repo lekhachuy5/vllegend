@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using VL_Legend.DAL;
 using VL_Legend.DAL.RepositoryCall;
 using VL_Legend.Models;
@@ -33,6 +34,7 @@ namespace VL_Legend
 
             services.AddScoped<ClassRoomRepository>();
             services.AddScoped<System_ConfigRepository>();
+            services.AddScoped<CoursesRepository>();
 
             // In production, the React files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -74,6 +76,7 @@ namespace VL_Legend
 
                 if (env.IsDevelopment())
                 {
+                    spa.Options.StartupTimeout = TimeSpan.FromSeconds(120);
                     spa.UseReactDevelopmentServer(npmScript: "start");
                 }
             });

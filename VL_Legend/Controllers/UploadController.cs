@@ -20,18 +20,21 @@ namespace VL_Legend.Controllers
             _env = env;
         }
 
-        [Route("Postfile")]
-        [HttpPost]    
-        public async Task<IActionResult> Upload(string name, IFormFile file)
+        [Route("Postfile/{folder}")]
+        [HttpPost("folder")]    
+        public async Task<IActionResult> Upload(IFormFile file,string folder)
         {
             
             var files = file;
-
+            if (String.IsNullOrEmpty(folder))
+            {
+                folder = "Upload";
+            }
             if (file.Length > 0)
             {
                
-                string pathup = Path.Combine(_env.ContentRootPath, @"ClientApp\public\Storages\Changes\");
-                string path = Path.Combine(_env.ContentRootPath, @"ClientApp\public\Storages\Changes\"+ files.FileName );
+                string pathup = Path.Combine(_env.ContentRootPath, @"ClientApp\public\Storages\"+folder);
+                string path = Path.Combine(_env.ContentRootPath, @"ClientApp\public\Storages\" + folder+@"\" + files.FileName );
                 bool exist = System.IO.Directory.Exists(pathup);
                 if (!exist)
                 {

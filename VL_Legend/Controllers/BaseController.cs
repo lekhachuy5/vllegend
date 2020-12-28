@@ -18,7 +18,7 @@ namespace VL_Legend.Controllers
 
         //get :api/[controller]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TEntity>>> Get()
+        public async Task<ActionResult<List<TEntity>>> Get()
         {
             return await _repository.GetAll();
         }
@@ -60,5 +60,7 @@ namespace VL_Legend.Controllers
             }
             return data;
         }
+
+       
     }
 }

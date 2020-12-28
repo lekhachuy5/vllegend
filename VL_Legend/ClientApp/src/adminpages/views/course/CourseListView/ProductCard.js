@@ -9,10 +9,11 @@ import {
   Divider,
   Grid,
   Typography,
+  Button,
   makeStyles
 } from '@material-ui/core';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
-import GetAppIcon from '@material-ui/icons/GetApp';
+import { Link } from "react-router-dom";
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -29,7 +30,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const ProductCard = ({ className, product, ...rest }) => {
+const ProductCard = ({ className, product,classId, ...rest }) => {
   const classes = useStyles();
  
   return (
@@ -55,14 +56,16 @@ const ProductCard = ({ className, product, ...rest }) => {
           gutterBottom
           variant="h4"
         >
-          {product.title}
+          {product.name}
         </Typography>
         <Typography
           align="center"
           color="textPrimary"
           variant="body1"
+          dangerouslySetInnerHTML={{
+            __html: product.descriptions,
+          }}
         >
-          {product.description}
         </Typography>
       </CardContent>
       <Box flexGrow={1} />
@@ -73,21 +76,15 @@ const ProductCard = ({ className, product, ...rest }) => {
           justify="space-between"
           spacing={2}
         >
-          <Grid
-            className={classes.statsItem}
-            item
-          >
-            <AccessTimeIcon
-              className={classes.statsIcon}
-              color="action"
-            />
-            <Typography
-              color="textSecondary"
-              display="inline"
-              variant="body2"
-            >
-              Updated 2hr ago
-            </Typography>
+         <Grid className={classes.statsItem} item>
+            <Button color="secondary" display="inline" variant="contained">
+              <Link
+                params={product.id}
+                to={{ pathname: `/quanly/course/edit/${classId}/${product.id}` }}
+              >
+                cập nhật
+              </Link>
+            </Button>
           </Grid>
           {/* <Grid
             className={classes.statsItem}

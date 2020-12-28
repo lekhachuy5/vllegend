@@ -7,9 +7,9 @@ import LecturerListView from 'src/adminpages/views/customer/LecturerListView';
 import DashboardView from 'src/adminpages/views/reports/DashboardView';
 import LoginView from 'src/adminpages/views/auth/LoginView';
 import NotFoundView from 'src/adminpages/views/errors/NotFoundView';
-import ClassListView from 'src/adminpages/views/product/ClassListView';
-import ClassFormCreateView from 'src/adminpages/views/product/ClassForm';
-import ClassFormEditView from 'src/adminpages/views/product/ClassListView/customForm';
+import ClassListView from 'src/adminpages/views/classroom/ClassListView';
+import ClassFormCreateView from 'src/adminpages/views/classroom/ClassForm';
+import ClassFormEditView from 'src/adminpages/views/classroom/ClassListView/customForm';
 import SettingsView from 'src/adminpages/views/settings/SettingsView';
 import StudentListView from 'src/adminpages/views/students/StudentsListView';
 import CourseListView from 'src/adminpages/views/course/CourseListView';
@@ -29,13 +29,14 @@ const routes = [
       { path: 'classes', element: <ClassListView /> },
       { path: 'configs', element: <SettingsView /> },
       { path: 'students', element: <StudentListView /> },
-      { path: 'course/:id', element: <CourseListView /> },
+      { path: 'course/:class_id', element: <CourseListView /> },
       { path: 'classes/form', element: <ClassFormCreateView /> },
       {
         path: 'classes/formedit/:id',
         element: <ClassFormEditView/>
       },
-      { path: 'course/create/', element: <CourseFormCreate /> },
+      { path: 'course/create/:class_id', element: <CourseFormCreate /> },
+      { path: 'course/edit/:class_id/:id', element: <CourseFormCreate /> },
       { path: '*', element: <Navigate to="/quanly/404" /> }
     ]
   },

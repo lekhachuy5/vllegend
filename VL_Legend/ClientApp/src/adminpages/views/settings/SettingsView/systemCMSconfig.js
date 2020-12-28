@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import * as action from "../../../../action/actions";
 import ReactQuill from "react-quill";
 import { connect } from "react-redux";
-import { SYSCFGURL, UPLOADFOLDER } from "../../../../constant/actionsTypes";
 import {
   Box,
   Button,
@@ -18,7 +16,11 @@ import {
   makeStyles,
   TextField,
 } from "@material-ui/core";
-import useForm from "../../product/ClassListView/useForm";
+import useForm from "../../classroom/ClassListView/useForm";
+import SysConfigApi from "../../../../apimod/sysConfigApi";
+import UploadAPI from "../../../../apimod/uploadApi";
+import Moment from "moment";
+
 const useStyles = makeStyles({
   root: {},
   item: {
@@ -32,6 +34,7 @@ const Notifications = ({ className, ...props }) => {
   const [filesToBeSent, setFilesToBeSent] = useState({
     name: "",
     file: null,
+    folder: "",
   });
   const [current, setCurrent] = useState({
     id: 1,
@@ -45,15 +48,15 @@ const Notifications = ({ className, ...props }) => {
     address: "",
   });
   useEffect(() => {
-    const value = axios
-      .get(SYSCFGURL + 1)
-      .then((response) => {
-        console.log(response.data);
-        setCurrent({ ...response.data });
-        setValues({ ...response.data });
-      })
-      .catch((err) => console.log(err));
+    getData();
   }, []);
+
+  const getData = async () => {
+    const response = await SysConfigApi.get();
+
+    setCurrent({ ...response });
+    setValues({ ...response });
+  };
 
   const initialFieldsValues = {
     id: 1,
@@ -65,6 +68,14 @@ const Notifications = ({ className, ...props }) => {
     phone: "",
     facebook: "",
     address: "",
+  };
+
+  const todayConvert = () => {
+    const getDate = new Date();
+    const getTime = Moment(getDate).format("hhmmss");
+    const today = Moment(getDate).format("DDMMyyyy");
+    const all = today + getTime;
+    return all;
   };
 
   const validate = (fieldsValues = values) => {
@@ -100,7 +111,6 @@ const Notifications = ({ className, ...props }) => {
   const ckChange = (e) => {
     const getVl = { description: e };
     const inputVal = Object.values(values).every((x) => x == null);
-    console.log(current);
     if (!inputVal) {
       setValues({
         ...current,
@@ -112,7 +122,7 @@ const Notifications = ({ className, ...props }) => {
         ...getVl,
       });
     }
-  }
+  };
   const updateSys = (e) => {
     console.log(values);
     e.preventDefault();
@@ -122,23 +132,30 @@ const Notifications = ({ className, ...props }) => {
     if (validate()) {
       if (values.image !== current.image && values.images !== null) {
         const fd = new FormData();
-        const config = {
-          headers: {
-            "content-type": "multipart/form-data",
-          },
-        };
-        fd.append("file", filesToBeSent.file, filesToBeSent.file.name);
-        axios.post(UPLOADFOLDER, fd, config).then((res) => {});
+        fd.append("file",filesToBeSent.file,filesToBeSent.name);
+        UploadAPI.create(filesToBeSent.folder,fd);
       }
-      props.updateSys(SYSCFGURL + "edit/", 1, inputVal);
+      SysConfigApi.update(inputVal);
     }
   };
 
   const handleUploadClick = (event) => {
+    const dateValue = todayConvert();
     const target = event.target.files[0];
-    setFilesToBeSent({ name: target.name, file: target });
+    
+    // get file name without extension and combine name withdate then combine code with extension
+    const setName = dateValue+target.name;
+     
+    console.log(setName);
+    // chuyển file sang FormData để post dữ liệu;
+
+    // chuyển dữ liệu vào file state
+   
+    setFilesToBeSent({ ...filesToBeSent,name: setName, file: target });
     console.log(target.name + " size :" + target.size);
-    setValues({ ...values, image: target.name });
+    // chuyển dữ liệu vào valúe state
+    setValues({ ...values, image: setName });
+    //đọc hình ảnh tải lên và hiển thị
     if (event.target.files && event.target.files[0]) {
       var reader = new FileReader();
       reader.onload = function(e) {
@@ -222,7 +239,7 @@ const Notifications = ({ className, ...props }) => {
                   />
                   <img
                     id="imgSmall"
-                    src={`/storages/changes/${values.image}`}
+                    src={`/storages/${filesToBeSent.folder? filesToBeSent.folder : "upload"}/${values.image}`}
                     style={{ maxHeight: "100px", maxWidth: "100px" }}
                   />
                 </Grid>

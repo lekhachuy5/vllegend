@@ -19,6 +19,7 @@ namespace VL_Legend.Models
         }
         public DbSet<Classroom> Classroom { get; set; }
         public DbSet<System_Config> System_Config { get; set; }
+        public DbSet<Courses> Courses { get; set; }
         public override int SaveChanges()
         {
             ChangeTracker.DetectChanges();

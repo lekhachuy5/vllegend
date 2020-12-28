@@ -14,12 +14,11 @@ import {
 import { Pagination } from "@material-ui/lab";
 import Page from "src/adminpages/components/Page";
 import ProductCard from "./ProductCard";
-import { CLASSROOMURL } from "../../../../constant/actionsTypes";
-import axios from "axios";
 import { connect } from "react-redux";
 import * as action from "../../../../action/actions";
 import clsx from "clsx";
 import { Search as SearchIcon } from "react-feather";
+import ClassApi from "src/apimod/classroomApi";
 
 const classes = makeStyles((theme) => ({
   root: {
@@ -56,16 +55,16 @@ const ProductList = ({ ...props }) => {
     getData();
   }, [filters, page]);
 
-  const getData = () => {
-    const requestUrl = CLASSROOMURL;
-    axios.get(requestUrl).then((res) => {
+  const getData = async () => {
+    try {
+      const res = await ClassApi.getAll();
       const getDg = filters
-        ? res.data.filter(
+        ? res.filter(
             (x) =>
               x.name.toLowerCase().includes(filters) ||
               x.descriptions.toLowerCase().includes(filters)
           )
-        : res.data;
+        : res;
       console.log(getDg);
       const data = getDg.sort((a, b) => a - b).reverse();
 
@@ -73,10 +72,12 @@ const ProductList = ({ ...props }) => {
       setState({
         ...state,
         pageCount: Math.ceil(data.length / state.perPage),
-        orgtableData: res.data,
+        orgtableData: res,
         tableData: slice,
       });
-    });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const changeSearchInputs = (e) => {
@@ -100,22 +101,12 @@ const ProductList = ({ ...props }) => {
     <Page className={classes.root} title="Lớp học">
       <Container maxWidth={false}>
         <div className={clsx(classes.root)}>
-          <Box display="flex" justifyContent="flex-end">
-            <Button
-              color="primary"
-              className={classes.importButton}
-              variant="contained"
-              href={`classes/form`}
-            >
-              Thêm lớp học
-            </Button>
-          </Box>
           <Box mt={3}>
             <Card>
               <CardContent>
-                <Box maxWidth={500}>
+                <Box>
                   <TextField
-                    fullWidth
+                     
                     InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
@@ -129,7 +120,18 @@ const ProductList = ({ ...props }) => {
                     variant="outlined"
                     onChange={changeSearchInputs}
                   />
+                  <Button
+                  style ={{margin:"1%", float:"right"}}
+                  
+                    color="primary"
+                    className={classes.importButton}
+                    variant="contained"
+                    href={`classes/form`}
+                  >
+                    Thêm lớp học
+                  </Button>
                 </Box>
+               
               </CardContent>
             </Card>
           </Box>
